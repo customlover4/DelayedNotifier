@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Создание уведомления</title>
+    <link rel="stylesheet" href="/static/main.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-wrapper">
+        <h1 class="form-title">Создать уведомление</h1>
+
+        <!-- Инструкция по Telegram -->
+        <div class="info-banner">
+          <p class="info-text">
+            Чтобы получать уведомления в Telegram,
+            <a
+              href="https://t.me/delayednotify_bot"
+              target="_blank"
+              class="link"
+              >напишите боту</a
+            >
+            перед отправкой формы.
+          </p>
+        </div>
+
+        <form class="notification-form" method="post" action="/notify">
+          <!-- Поле сообщения -->
+          <div class="form-group">
+            <label for="message" class="form-label">Текст уведомления</label>
+            <textarea
+              id="message"
+              name="message"
+              class="apple-textarea"
+              placeholder="Введите ваше сообщение..."
+              rows="5"
+              required
+            ></textarea>
+          </div>
+
+          <!-- Дата и время уведомления -->
+          <div class="form-group">
+            <label for="notify_at" class="form-label"
+              >Дата и время отправки (Должно отличаться от текущего времени, как
+              минимум на минуту)</label
+            >
+            <input
+              type="datetime-local"
+              id="notify_at"
+              name="notify_at"
+              class="apple-input"
+              required
+            />
+          </div>
+
+          <!-- Каналы отправки -->
+          <div class="form-group">
+            <legend class="channels-title">Способы отправки</legend>
+            <div class="channels-container">
+              <label class="channel-checkbox">
+                <input
+                  type="checkbox"
+                  name="telegram"
+                  value="telegram"
+                  id="telegram-checkbox"
+                />
+                <span class="checkmark">
+                  <svg
+                    class="channel-icon"
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.05 5.56-5.022c.242-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.652-.64.136-.945l11.566-4.458c.535-.196 1.004.128.832.941z"
+                    />
+                  </svg>
+                </span>
+                <span class="channel-label">Telegram</span>
+              </label>
+
+              <div
+                class="channel-fields"
+                id="telegram-fields"
+                style="display: none"
+              >
+                <div class="form-group">
+                  <label for="telegram_id" class="form-label"
+                    >Telegram ID</label
+                  >
+                  <input
+                    type="text"
+                    id="telegram_id"
+                    name="telegram_id"
+                    class="apple-input"
+                    placeholder="123456789"
+                  />
+                </div>
+
+                <!-- Подтверждение, что пользователь написал боту -->
+                <div class="form-group">
+                  <label class="confirm-checkbox">
+                    <input type="checkbox" id="telegram-confirmed" />
+                    <span class="checkmark-small"></span>
+                    <span class="confirm-label">Я написал боту в Telegram</span>
+                  </label>
+                  <div
+                    class="error-message"
+                    id="confirm-error"
+                    style="display: none"
+                  >
+                    Требуется подтверждение для использования Telegram
+                  </div>
+                </div>
+              </div>
+
+              <label class="channel-checkbox">
+                <input
+                  type="checkbox"
+                  name="email"
+                  value="email"
+                  id="email-checkbox"
+                />
+                <span class="checkmark">
+                  <svg
+                    class="channel-icon"
+                    viewBox="0 0 24 24"
+                    width="20"
+                    height="20"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                    />
+                  </svg>
+                </span>
+                <span class="channel-label">Email</span>
+              </label>
+
+              <div
+                class="channel-fields"
+                id="email-fields"
+                style="display: none"
+              >
+                <div class="form-group">
+                  <label for="email" class="form-label">Email адрес</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="apple-input"
+                    placeholder="user@example.com"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="apple-button">
+            Создать уведомление
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="/static/main.js"></script>
+  </body>
+</html>

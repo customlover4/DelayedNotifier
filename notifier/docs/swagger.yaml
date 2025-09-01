@@ -1,0 +1,188 @@
+basePath: /
+definitions:
+  request.CreateNotify:
+    properties:
+      date:
+        type: string
+      email:
+        type: string
+      message:
+        type: string
+      telegram_id:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      error:
+        type: string
+      result: {}
+      status:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Создает отложенные уведомления в очереди
+  title: DelayedNotifier
+  version: 0.0.1
+paths:
+  /:
+    get:
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: OK
+      summary: вывести главную страницу с формай
+      tags:
+      - frontend
+  /notify:
+    post:
+      consumes:
+      - application/json
+      description: 'Создание нового уведомления в очереди, date: RFC3339 UTC'
+      parameters:
+      - description: Данные уведомления
+        in: body
+        name: notify
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateNotify'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+        "504":
+          description: Gateway Timeout
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Создать уведомление
+      tags:
+      - notifications
+  /notify/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: удаление конкретного уведомления из очереди
+      parameters:
+      - description: ID уведомления
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: удалить уведомление по ID
+      tags:
+      - notifications
+    get:
+      consumes:
+      - application/json
+      description: Получение информации о конкретном уведомлении
+      parameters:
+      - description: ID уведомления
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Получить уведомление по ID
+      tags:
+      - notifications
+    patch:
+      consumes:
+      - application/json
+      description: обновить конкретное уведомление из очереди
+      parameters:
+      - description: ID уведомления
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: complete || pending
+        in: body
+        name: status
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: обновить статус по ID
+      tags:
+      - notifications
+swagger: "2.0"

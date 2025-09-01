@@ -1,0 +1,114 @@
+services:
+  redis:
+    image: redis:7.4-alpine # Используйте актуальную версию
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass qqq
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    hostname: rabbitmq-host
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_ERLANG_COOKIE=secret_cookie
+
+      - RABBITMQ_PLUGINS_DIR=/opt/rabbitmq/plugins:/opt/rabbitmq/custom_plugins
+      - RABBITMQ_ENABLED_PLUGINS_FILE=/etc/rabbitmq/enabled_plugins
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
+      - ./plugins:/opt/rabbitmq/custom_plugins
+      - ./enabled_plugins:/etc/rabbitmq/enabled_plugins
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: delayed-notifier-db
+    restart: unless-stopped
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: qqq
+      POSTGRES_DB: test
+      POSGTRES_INITDB_ARGS: --encoding=UTF-8 --locale=C
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev -d test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - app-network
+
+  notifier:
+    build:
+      context: ../notifier
+      dockerfile: ../notifier/Dockerfile
+    ports:
+      - "80:8080"
+    environment:
+      - DEBUG=false
+      - PORT=8080
+      - POSTGRES_PASSWORD=qqq
+      - REDIS_PASSWORD=qqq
+      - RABBIT_PASSWORD=password
+      - CONFIG_PATH=../config/config.yml
+    volumes:
+      - ../config:/config
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  sender:
+    build:
+      context: ../sender
+      dockerfile: ../sender/Dockerfile
+    volumes:
+      - ../config:/config
+    restart: unless-stopped
+    environment:
+      - NOTIFIER_PORT=8080
+      - EMAIL_PASSWORD=lmky oyvu rnwj aamc
+      - BOT_TOKEN=8052892345:AAEdWZ8pvxab1vqecabjSlPC7WMb5qZMTNs
+      - RABBIT_PASSWORD=password
+      - CONFIG_PATH=../config/config.yml
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+    driver: local
+  rabbitmq_data:
+  rabbitmq_logs:
