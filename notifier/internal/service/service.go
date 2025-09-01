@@ -34,6 +34,8 @@ var (
 )
 
 func (s *Service) CreateNotification(n notification.Notification) (int64, error) {
+	const op = "internal.service.CreateNotification"
+
 	if n.Date.Unix() < time.Now().UTC().Add(time.Second*20).Unix() {
 		return 0, fmt.Errorf(
 			"%w: %s", ErrNotValidData, "date in past",
@@ -57,13 +59,15 @@ func (s *Service) CreateNotification(n notification.Notification) (int64, error)
 
 	id, err := s.str.CreateNotification(n)
 	if err != nil {
-		return 0, fmt.Errorf("%w: %w", ErrStorageInternal, err)
+		return 0, fmt.Errorf("%s: %w -> %w", op, ErrStorageInternal, err)
 	}
 
 	return id, nil
 }
 
 func (s *Service) Notification(id int64) (notification.Notification, error) {
+	const op = "internal.service.CreateNotification"
+
 	if id <= 0 {
 		return notification.Notification{}, fmt.Errorf(
 			"%w: %s", ErrNotValidData, "notification id is negative or == 0",
@@ -74,13 +78,15 @@ func (s *Service) Notification(id int64) (notification.Notification, error) {
 	if errors.Is(err, storage.ErrNotFound) {
 		return n, fmt.Errorf("%w: %w", ErrNotFound, err)
 	} else if err != nil {
-		return n, fmt.Errorf("%w: %w", ErrStorageInternal, err)
+		return n, fmt.Errorf("%s: %w -> %w", op, ErrStorageInternal, err)
 	}
 
 	return n, nil
 }
 
 func (s *Service) DeleteNotification(id int64) error {
+	const op = "internal.service.CreateNotification"
+
 	if id <= 0 {
 		return fmt.Errorf(
 			"%w: %s", ErrNotValidData, "notification id is negative or == 0",
@@ -91,13 +97,15 @@ func (s *Service) DeleteNotification(id int64) error {
 	if errors.Is(err, storage.ErrNotAffected) {
 		return fmt.Errorf("%w: %w", ErrNotAffected, err)
 	} else if err != nil {
-		return fmt.Errorf("%w: %w", ErrStorageInternal, err)
+		return fmt.Errorf("%s: %w -> %w", op, ErrStorageInternal, err)
 	}
 
 	return nil
 }
 
 func (s *Service) UpdateNotificationStatus(status string, id int64) error {
+	const op = "internal.service.CreateNotification"
+
 	if status != notification.StatusComplete && status != notification.StatusPending {
 		return fmt.Errorf(
 			"%w: %s", ErrNotValidData,
@@ -114,7 +122,7 @@ func (s *Service) UpdateNotificationStatus(status string, id int64) error {
 	if errors.Is(err, storage.ErrNotAffected) {
 		return ErrNotAffected
 	} else if err != nil {
-		return fmt.Errorf("%w: %w", ErrStorageInternal, err)
+		return fmt.Errorf("%s: %w -> %w", op, ErrStorageInternal, err)
 	}
 
 	return nil

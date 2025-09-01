@@ -37,7 +37,8 @@ func main() {
 	cfg := config.New()
 	err := cfg.Load(os.Getenv("CONFIG_PATH"))
 	if err != nil {
-		panic(err)
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
 	}
 	if os.Getenv("DEBUG") == "false" {
 		gin.SetMode(gin.ReleaseMode)
@@ -68,7 +69,6 @@ func main() {
 	srv := service.New(str)
 
 	router := ginext.New()
-	fmt.Println()
 	router.LoadHTMLGlob("templates/*.html")
 	web.SetRoutes(router, srv)
 

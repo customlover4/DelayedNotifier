@@ -86,6 +86,8 @@ func New(username, password, addr, queue, ex, key string) *Rabbit {
 }
 
 func (r *Rabbit) Publish(val []byte, d int64) error {
+	const op = "internal.storage.rabbit.Publish"
+
 	err := r.ch.Publish(r.ex, r.key, true, false, amqp091.Publishing{
 		Headers: amqp091.Table{
 			"x-delay": d,
@@ -94,6 +96,7 @@ func (r *Rabbit) Publish(val []byte, d int64) error {
 		Body:        val,
 	})
 	if err != nil {
+		zlog.Logger.Error().AnErr("err", err).Msg(op)
 		return err
 	}
 

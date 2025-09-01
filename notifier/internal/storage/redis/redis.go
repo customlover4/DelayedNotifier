@@ -3,7 +3,6 @@ package redis
 import (
 	"context"
 	"delayednotifier/internal/entities/notification"
-	"fmt"
 	"strconv"
 
 	"github.com/go-redis/redis/v8"
@@ -17,7 +16,6 @@ type Redis struct {
 
 func New(addr, password string, db int) *Redis {
 	const op = "internal.storage.redis.New"
-	fmt.Println(addr, password)
 	r := redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: password,

@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"delayednotifier/internal/entities/notification"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/go-redis/redis/v8"
@@ -103,7 +102,6 @@ func (s *Storage) GetNotification(id int64) (notification.Notification, error) {
 		return n, err
 	}
 	if n.ID != 0 {
-		fmt.Println("Here")
 		return n, nil
 	}
 
