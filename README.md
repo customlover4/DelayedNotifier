@@ -16,7 +16,7 @@ notifier:
     build: # files for building
         context: ../notifier
         dockerfile: ../notifier/Dockerfile
-    ports: # if you want to change internal port, you should change notifier env var and sender env var
+    ports: # if you want to change internal port, you should change notifier env var and sender env var, also in dockerfile
         - "80:8080"
     environment:
         - DEBUG=false # if false debug mode will off

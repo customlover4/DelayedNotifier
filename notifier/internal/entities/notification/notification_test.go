@@ -15,9 +15,9 @@ func BenchmarkBinary(b *testing.B) {
 			ID: 1, TelegramID: 123, Message: "hihi",
 			Email: "asd@asad.com", Status: "pending", Date: tm,
 		}
-		_, _ = m.MarshalBinary()
-		// t := Notification{}
-		// t.UnmarshalBinary(b)
+		b, _ := m.MarshalBinary()
+		t := Notification{}
+		t.UnmarshalBinary(b)
 	}
 }
 
