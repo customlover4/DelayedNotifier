@@ -99,7 +99,10 @@ func (n *Notification) UnmarshalBinary(data []byte) error {
 	if err := binary.Read(b, binary.LittleEndian, bf); err != nil {
 		return err
 	}
-	t.UnmarshalBinary(bf)
+	err := t.UnmarshalBinary(bf)
+	if err != nil {
+		return err
+	}
 	n.Date = t
 
 	return nil

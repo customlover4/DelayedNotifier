@@ -72,7 +72,7 @@ func TestMain(t *testing.T) {
 
 			rr := httptest.NewRecorder()
 			req := httptest.NewRequest(http.MethodGet, "/main", nil)
-			h := Main(tt.args.s)
+			h := Main(tt.s)
 
 			g := gin.Default()
 			g.LoadHTMLFiles(templatePath)
@@ -182,7 +182,7 @@ func TestCreating(t *testing.T) {
 			req := httptest.NewRequest(
 				http.MethodPost, "/main", strings.NewReader(tt.body),
 			)
-			h := CreateNotify(tt.args.s)
+			h := CreateNotify(tt.s)
 
 			g := gin.Default()
 			g.POST("/main", h)
@@ -289,7 +289,7 @@ func TestGetter(t *testing.T) {
 			req := httptest.NewRequest(http.MethodGet, rUrl, nil)
 
 			g := gin.Default()
-			h := GetNotify(tt.args.s)
+			h := GetNotify(tt.s)
 			g.GET(url+"/:id", h)
 			g.ServeHTTP(rr, req)
 			if tt.code != rr.Result().StatusCode {
@@ -394,7 +394,7 @@ func TestDeleter(t *testing.T) {
 			req := httptest.NewRequest(http.MethodDelete, rUrl, nil)
 
 			g := gin.Default()
-			h := DeleteNotify(tt.args.s)
+			h := DeleteNotify(tt.s)
 			g.DELETE(url+"/:id", h)
 			g.ServeHTTP(rr, req)
 			if tt.code != rr.Result().StatusCode {
@@ -532,7 +532,7 @@ func TestUpdater(t *testing.T) {
 			req := httptest.NewRequest(http.MethodPatch, rUrl, strings.NewReader(tt.body))
 
 			g := gin.Default()
-			h := UpdateNotify(tt.args.s)
+			h := UpdateNotify(tt.s)
 			g.PATCH(url+"/:id", h)
 			g.ServeHTTP(rr, req)
 			if tt.code != rr.Result().StatusCode {

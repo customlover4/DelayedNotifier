@@ -36,7 +36,7 @@ func New(addr, password string, db int) *Redis {
 func (r *Redis) Shutdown() {
 	const op = "internal.storage.redis.shutdown"
 
-	err := r.rd.Client.Close()
+	err := r.rd.Close()
 	if err != nil {
 		zlog.Logger.Error().AnErr("err", err).Msg(op)
 	}

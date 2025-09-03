@@ -67,6 +67,7 @@ func (p *Postgres) UpdateNotificationStatus(status string, id int64) (int64, err
 	if err != nil {
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}
+
 	affected, err := r.RowsAffected()
 	if err != nil {
 		return 0, fmt.Errorf("%s: %w", op, err)

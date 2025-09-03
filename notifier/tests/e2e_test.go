@@ -78,7 +78,9 @@ func SetupTestDB(t *testing.T) testcontainers.Container {
 
 	oldDB, err := sql.Open("postgres", connStr)
 	require.NoError(t, err)
-	defer oldDB.Close()
+	defer func() {
+		_ = oldDB.Close()
+	}()
 
 	err = oldDB.Ping()
 	require.NoError(t, err)

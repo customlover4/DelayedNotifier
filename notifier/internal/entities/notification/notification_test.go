@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 func BenchmarkBinary(b *testing.B) {
@@ -17,15 +19,12 @@ func BenchmarkBinary(b *testing.B) {
 		}
 		b, _ := m.MarshalBinary()
 		t := Notification{}
-		t.UnmarshalBinary(b)
+		_ = t.UnmarshalBinary(b)
 	}
 }
 
 func BenchmarkJSON(b *testing.B) {
 	tm, _ := time.Parse(DateLayout, "2000-12-22 15:00")
-	type tmp struct {
-		R string `json:"r"`
-	}
 	for i := 0; i < b.N; i++ {
 		m := Notification{
 			ID: 1, TelegramID: 123, Message: "hihi",
@@ -33,7 +32,7 @@ func BenchmarkJSON(b *testing.B) {
 		}
 		v, _ := json.Marshal(m)
 		t := Notification{}
-		json.Unmarshal(v, &t)
+		_ = json.Unmarshal(v, &t)
 	}
 }
 
@@ -49,9 +48,9 @@ func BenchmarkJSONBinary(b *testing.B) {
 		b, _ := m.MarshalBinary()
 		v, _ := json.Marshal(b)
 		var r []byte
-		json.Unmarshal(v, &r)
+		_ = json.Unmarshal(v, &r)
 		t := Notification{}
-		t.UnmarshalBinary(r)
+		_ = t.UnmarshalBinary(r)
 	}
 }
 
@@ -78,7 +77,8 @@ func TestMarshalUnmarshal(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			b, _ := tt.data.MarshalBinary()
 			tmp := Notification{}
-			tmp.UnmarshalBinary(b)
+			err := tmp.UnmarshalBinary(b)
+			require.NoError(t, err)
 			if !reflect.DeepEqual(tt.want, tmp) {
 				t.Errorf("Marhsal/Unmarshal() get=%v, want %v", tmp, tt.want)
 			}

@@ -73,9 +73,14 @@ func main() {
 	web.SetRoutes(router, srv)
 
 	zlog.Logger.Info().Msg("start listening port")
-	go router.Run(
-		fmt.Sprintf(":%s", os.Getenv("PORT")),
-	)
+	go func() {
+		err := router.Run(
+			fmt.Sprintf(":%s", os.Getenv("PORT")),
+		)
+		if err != nil {
+			zlog.Logger.Error().Err(err).Msg("error on listening")
+		}
+	}()
 
 	<-sig
 	zlog.Logger.Info().Msg("shutdown sarting...")
