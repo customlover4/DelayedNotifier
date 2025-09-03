@@ -49,7 +49,7 @@ func UpdateStatus(id int64) error {
 	}
 	if resp.StatusCode != http.StatusOK {
 		b := new(bytes.Buffer)
-		io.Copy(b, resp.Body)
+		_, _ = io.Copy(b, resp.Body)
 		zlog.Logger.Info().Fields(map[string]any{"body": b.String()}).
 			Send()
 		return ErrWrongStatusCode

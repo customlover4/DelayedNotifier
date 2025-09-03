@@ -14,8 +14,6 @@ import (
 	"github.com/wb-go/wbf/zlog"
 )
 
-var token = "8052892345:AAEdWZ8pvxab1vqecabjSlPC7WMb5qZMTNs"
-
 type SendMessage struct {
 	TelegramID string `json:"chat_id"`
 	Message    string `json:"text"`
@@ -44,7 +42,7 @@ func Send(n notification.Notification) {
 	}
 	if resp.StatusCode != http.StatusOK {
 		b := new(bytes.Buffer)
-		io.Copy(b, resp.Body)
+		_, _ = io.Copy(b, resp.Body)
 		zlog.Logger.Error().Err(errors.New("wrong status code on request")).
 			Fields(map[string]any{"op": op, "body": b.String()}).Send()
 	}

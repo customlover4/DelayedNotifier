@@ -8,12 +8,12 @@ import (
 
 // Notify модель отложенного уведомления
 type Notification struct {
-	ID               int64     `db:"id"`
-	TelegramID       int64     `db:"telegram_id"`
-	Message          string    `db:"message"`
-	Email            string    `db:"email"`
-	Status           string    `db:"status"`
-	Date             time.Time `db:"dt"`
+	ID         int64     `db:"id"`
+	TelegramID int64     `db:"telegram_id"`
+	Message    string    `db:"message"`
+	Email      string    `db:"email"`
+	Status     string    `db:"status"`
+	Date       time.Time `db:"dt"`
 }
 
 const (
@@ -99,7 +99,10 @@ func (n *Notification) UnmarshalBinary(data []byte) error {
 	if err := binary.Read(b, binary.LittleEndian, bf); err != nil {
 		return err
 	}
-	t.UnmarshalBinary(bf)
+	err := t.UnmarshalBinary(bf)
+	if err != nil {
+		return err
+	}
 	n.Date = t
 
 	return nil
